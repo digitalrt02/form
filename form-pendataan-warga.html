@@ -1,0 +1,224 @@
+ <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Data KTP</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; display: flex; justify-content: center; padding: 20px; }
+        .form-container { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input[type="text"], select, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; }
+        .row { display: flex; gap: 15px; }
+        .row .form-group { flex: 1; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #3498db; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-submit:disabled { background-color: #95a5a6; }
+
+        /* Styling Modal / Popup */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+            justify-content: center; align-items: center;
+        }
+
+        /* KTP Card dalam Popup */
+        .ktp-card {
+            width: 500px; height: 300px;
+            background-color: #b0e2ff; border-radius: 15px;
+            padding: 20px; position: relative;
+            border: 1px solid #999; box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+
+        .close-btn {
+            position: absolute; top: -40px; right: 0;
+            color: white; font-size: 20px; cursor: pointer;
+            background: #333; padding: 5px 15px; border-radius: 5px;
+        }
+
+        .header-ktp { text-align: center; font-weight: bold; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        .content-ktp { display: flex; }
+        .details { flex: 2; font-size: 10px; font-weight: bold; }
+        .details table { width: 100%; border-collapse: collapse; }
+        .details td { padding: 1px 0; vertical-align: top; }
+        .nik-row { font-size: 16px; margin-bottom: 5px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .photo-box { width: 100px; height: 125px; background-color: #a00; border: 1px solid #000; overflow: hidden; margin: 0 auto; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Form Input Data KTP</h2>
+    <form id="ktpForm">
+        <div class="form-group"><label>NIK</label><input type="text" id="nik" placeholder="Masukkan NIK"></div>
+        <div class="form-group"><label>Nama Lengkap</label><input type="text" id="nama" placeholder="Nama Lengkap"></div>
+        <div class="row">
+            <div class="form-group"><label>Tempat Lahir</label><input type="text" id="tempat_lahir" placeholder="Kota Lahir"></div>
+            <div class="form-group"><label>Tgl Lahir</label><input type="text" id="tgl_lahir" placeholder="DD-MM-YYYY"></div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <select id="gender"><option value="LAKI-LAKI">LAKI-LAKI</option><option value="PEREMPUAN" selected>PEREMPUAN</option></select>
+            </div>
+            <div class="form-group"><label>Gol. Darah</label><input type="text" id="gol_darah" placeholder="-"></div>
+        </div>
+        <div class="form-group"><label>Alamat</label><input type="text" id="alamat" placeholder="Nama Jalan"></div>
+        <div class="row">
+            <div class="form-group"><label>RT/RW</label><input type="text" id="rtrw" placeholder="000/000"></div>
+            <div class="form-group"><label>Kel/Desa</label><input type="text" id="keldesa" placeholder="Kelurahan"></div>
+        </div>
+        <div class="form-group"><label>Kecamatan</label><input type="text" id="kecamatan" placeholder="Kecamatan"></div>
+        <div class="row">
+            <div class="form-group"><label>Agama</label><input type="text" id="agama" placeholder="Agama"></div>
+            <div class="form-group">
+                <label for="status">Status Perkawinan</label>
+                <select id="status">
+                    <option value="BELUM KAWIN">Belum Menikah</option>
+                    <option value="KAWIN">Menikah</option>
+                    <option value="CERAI HIDUP">Cerai</option>
+                    <option value="GADIS">Gadis</option>
+                    <option value="JANDA">Janda</option>
+                    <option value="DUDA">Duda</option>
+                    <option value="LANSIA">Lansia</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>Pekerjaan</label><input type="text" id="pekerjaan" placeholder="Pekerjaan"></div>
+        <div class="row">
+            <div class="form-group"><label>Kewarganegaraan</label><input type="text" id="kwn" value="WNI"></div>
+            <div class="form-group"><label>Berlaku Hingga</label><input type="text" id="berlaku" value="SEUMUR HIDUP"></div>
+        </div>
+        <div class="form-group"><label>Foto KTP (Upload)</label><input type="file" id="foto_file" accept="image/*"></div>
+        <button type="submit" class="btn-submit" id="submitBtn">Simpan Data</button>
+    </form>
+</div>
+
+<div id="ktpModal" class="modal">
+    <div style="position: relative;">
+        <span class="close-btn" onclick="document.getElementById('ktpModal').style.display='none'">Tutup [X]</span>
+        <div class="ktp-card">
+            <div class="header-ktp">PENDATAAN WARGA RT.02<br>PADASUKA-CIMAMHI</div>
+            <div class="content-ktp">
+                <div class="details">
+                    <div class="nik-row"><strong>NIK : <span id="p-nik"></span></strong></div>
+                    <table>
+                        <tr><td width="100">Nama</td><td>: <span id="p-nama"></span></td></tr>
+                        <tr><td>Tempat/Tgl Lahir</td><td>: <span id="p-ttl"></span></td></tr>
+                        <tr><td>Jenis Kelamin</td><td>: <span id="p-gender"></span></td></tr>
+                        <tr><td>Alamat</td><td>: <span id="p-alamat"></span></td></tr>
+                        <tr><td>&nbsp;&nbsp;RT/RW</td><td>: <span id="p-rtrw"></span></td></tr>
+                        <tr><td>&nbsp;&nbsp;Kel/Desa</td><td>: <span id="p-kel"></span></td></tr>
+                        <tr><td>&nbsp;&nbsp;Kecamatan</td><td>: <span id="p-kec"></span></td></tr>
+                        <tr><td>Agama</td><td>: <span id="p-agama"></span></td></tr>
+                        <tr><td>Status Perkawinan</td><td>: <span id="p-status"></span></td></tr>
+                        <tr><td>Pekerjaan</td><td>: <span id="p-pekerjaan"></span></td></tr>
+                        <tr><td>Kewarganegaraan</td><td>: <span id="p-kwn"></span></td></tr>
+                        <tr><td>Berlaku Hingga</td><td>: <span id="p-berlaku"></span></td></tr>
+                    </table>
+                </div>
+                <div class="photo-section" style="flex:1; text-align:center;">
+                    <div class="photo-box"><img id="p-foto" src=""></div>
+                    <div style="font-size: 9px; margin-top: 5px;">JAKARTA BARAT<br><span>10-05-2026</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  document.getElementById('ktpForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const fileInput = document.getElementById('foto_file');
+    btn.innerText = "Sedang Memproses...";
+    btn.disabled = true;
+
+    // --- PENTING: Ganti URL di bawah ini dengan URL Web App (Deployment) kamu ---
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbxRnjWulh4cg410lsOHAJHchysVNhYEm5iRYLHfT7IivGO3mXMKCbOhl6q0e6kYPfboOA/exec";
+
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const fileData = { base64: e.target.result.split(',')[1], mimeType: file.type };
+        kirim(fileData);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      kirim(null);
+    }
+
+    function kirim(fileData) {
+      const formData = {
+        nik: document.getElementById('nik').value,
+        nama: document.getElementById('nama').value,
+        tempat_lahir: document.getElementById('tempat_lahir').value,
+        tgl_lahir: document.getElementById('tgl_lahir').value,
+        gender: document.getElementById('gender').value,
+        gol_darah: document.getElementById('gol_darah').value,
+        alamat: document.getElementById('alamat').value,
+        rtrw: document.getElementById('rtrw').value,
+        keldesa: document.getElementById('keldesa').value,
+        kecamatan: document.getElementById('kecamatan').value,
+        agama: document.getElementById('agama').value,
+        status: document.getElementById('status').value,
+        pekerjaan: document.getElementById('pekerjaan').value,
+        kwn: document.getElementById('kwn').value,
+        berlaku: document.getElementById('berlaku').value,
+        fileData: fileData // Dikirim di dalam satu paket JSON
+      };
+
+      // Menggunakan Fetch API untuk hosting luar
+      fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors", // Agar tidak error CORS
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      })
+      .then(() => {
+          // --- LOGIKA MENGISI POPUP (DIJANJIKAN TETAP ADA) ---
+          document.getElementById('p-nik').innerText = formData.nik;
+          document.getElementById('p-nama').innerText = formData.nama;
+          document.getElementById('p-ttl').innerText = formData.tempat_lahir + ", " + formData.tgl_lahir;
+          document.getElementById('p-gender').innerText = formData.gender + " (GOL: " + formData.gol_darah + ")";
+          document.getElementById('p-alamat').innerText = formData.alamat;
+          document.getElementById('p-rtrw').innerText = formData.rtrw;
+          document.getElementById('p-kel').innerText = formData.keldesa;
+          document.getElementById('p-kec').innerText = formData.kecamatan;
+          document.getElementById('p-agama').innerText = formData.agama;
+          document.getElementById('p-status').innerText = formData.status;
+          document.getElementById('p-pekerjaan').innerText = formData.pekerjaan;
+          document.getElementById('p-kwn').innerText = formData.kwn;
+          document.getElementById('p-berlaku').innerText = formData.berlaku;
+
+          if (fileInput.files[0]) {
+            document.getElementById('p-foto').src = URL.createObjectURL(fileInput.files[0]);
+          }
+
+          // Tampilkan Modal
+          document.getElementById('ktpModal').style.display = 'flex';
+
+          // Reset Form & Button
+          alert("Data sedang diproses ke Spreadsheet...");
+          btn.innerText = "Simpan Data";
+          btn.disabled = false;
+          document.getElementById('ktpForm').reset();
+      })
+      .catch(err => {
+          alert("Gagal Terhubung: " + err);
+          btn.innerText = "Simpan Data";
+          btn.disabled = false;
+      });
+    }
+  });
+</script>
+</body>
+</html>
