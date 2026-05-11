@@ -16,6 +16,7 @@
         .btn-submit { width: 100%; padding: 12px; background-color: #3498db; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-submit:disabled { background-color: #95a5a6; }
 
+        /* Styling Modal / Popup */
         .modal {
             display: none; 
             position: fixed; 
@@ -25,6 +26,7 @@
             justify-content: center; align-items: center;
         }
 
+        /* KTP Card dalam Popup */
         .ktp-card {
             width: 500px; height: 300px;
             background-color: #b0e2ff; border-radius: 15px;
@@ -58,19 +60,22 @@
         <div class="form-group"><label>NIK</label><input type="text" id="nik" placeholder="Masukkan NIK"></div>
         <div class="form-group"><label>Nama Lengkap</label><input type="text" id="nama" placeholder="Nama Lengkap"></div>
         <div class="row">
-            <div class="form-group"><label>Tempat Lahir</label><input type="text" id="tempat_lahir" placeholder="Kota Lahir"></div>
+            <div class="form-group"><label>Tempat Lahir</label><input type="text" id="tempat_lahir" placeholder="Kota"></div>
             <div class="form-group"><label>Tgl Lahir</label><input type="text" id="tgl_lahir" placeholder="DD-MM-YYYY"></div>
         </div>
         <div class="row">
             <div class="form-group">
                 <label>Jenis Kelamin</label>
-                <select id="gender"><option value="LAKI-LAKI">LAKI-LAKI</option><option value="PEREMPUAN" selected>PEREMPUAN</option></select>
+                <select id="gender">
+                    <option value="LAKI-LAKI">LAKI-LAKI</option>
+                    <option value="PEREMPUAN" selected>PEREMPUAN</option>
+                </select>
             </div>
             <div class="form-group"><label>Gol. Darah</label><input type="text" id="gol_darah" placeholder="-"></div>
         </div>
-        <div class="form-group"><label>Alamat</label><input type="text" id="alamat" placeholder="Nama Jalan"></div>
+        <div class="form-group"><label>Alamat</label><input type="text" id="alamat" placeholder="Jl. Contoh No. 1"></div>
         <div class="row">
-            <div class="form-group"><label>RT/RW</label><input type="text" id="rtrw" placeholder="000/000"></div>
+            <div class="form-group"><label>RT/RW</label><input type="text" id="rtrw" placeholder="001/002"></div>
             <div class="form-group"><label>Kel/Desa</label><input type="text" id="keldesa" placeholder="Kelurahan"></div>
         </div>
         <div class="form-group"><label>Kecamatan</label><input type="text" id="kecamatan" placeholder="Kecamatan"></div>
@@ -103,7 +108,7 @@
     <div style="position: relative;">
         <span class="close-btn" onclick="document.getElementById('ktpModal').style.display='none'">Tutup [X]</span>
         <div class="ktp-card">
-            <div class="header-ktp">PENDATAAN WARGA RT.02<br>PADASUKA-CIMAMHI</div>
+            <div class="header-ktp">PENDATAAN WARGA RT.02<br>PADASUKA-CIMAHI</div>
             <div class="content-ktp">
                 <div class="details">
                     <div class="nik-row"><strong>NIK : <span id="p-nik"></span></strong></div>
@@ -124,7 +129,7 @@
                 </div>
                 <div class="photo-section" style="flex:1; text-align:center;">
                     <div class="photo-box"><img id="p-foto" src=""></div>
-                    <div style="font-size: 9px; margin-top: 5px;">JAKARTA BARAT<br><span>10-05-2026</span></div>
+                    <div style="font-size: 9px; margin-top: 5px;">KOTA CIMAHI<br><span>10-05-2026</span></div>
                 </div>
             </div>
         </div>
@@ -132,89 +137,90 @@
 </div>
 
 <script>
-  // --- KONFIGURASI URL ---
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbzj8GYOzFwNhByIyvn6N-gWArAJNy6egftlAUZjmCyaORovEy1bsEj1LmsJ8F7nGnfF/exec";
+    // GANTI INI DENGAN URL WEB APP ANDA
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzj8GYOzFwNhByIyvn6N-gWArAJNy6egftlAUZjmCyaORovEy1bsEj1LmsJ8F7nGnfF/exec";
 
-  document.getElementById('ktpForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const fileInput = document.getElementById('foto_file');
-    
-    btn.innerText = "Sedang Memproses...";
-    btn.disabled = true;
+    document.getElementById('ktpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const fileInput = document.getElementById('foto_file');
+        btn.innerText = "Sedang Memproses...";
+        btn.disabled = true;
 
-    const file = fileInput.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const fileData = { base64: e.target.result.split(',')[1], mimeType: file.type };
-        kirimData(fileData);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      kirimData(null);
-    }
-
-    function kirimData(fileData) {
-      const formData = {
-        nik: document.getElementById('nik').value,
-        nama: document.getElementById('nama').value,
-        tempat_lahir: document.getElementById('tempat_lahir').value,
-        tgl_lahir: document.getElementById('tgl_lahir').value,
-        gender: document.getElementById('gender').value,
-        gol_darah: document.getElementById('gol_darah').value,
-        alamat: document.getElementById('alamat').value,
-        rtrw: document.getElementById('rtrw').value,
-        keldesa: document.getElementById('keldesa').value,
-        kecamatan: document.getElementById('kecamatan').value,
-        agama: document.getElementById('agama').value,
-        status: document.getElementById('status').value,
-        pekerjaan: document.getElementById('pekerjaan').value,
-        kwn: document.getElementById('kwn').value,
-        berlaku: document.getElementById('berlaku').value,
-        fileData: fileData 
-      };
-
-      fetch(webAppUrl, {
-        method: "POST",
-        mode: "no-cors", 
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "text/plain;charset=utf-8" }
-      })
-      .then(() => {
-        // Tampilkan ke Modal
-        document.getElementById('p-nik').innerText = formData.nik;
-        document.getElementById('p-nama').innerText = formData.nama;
-        document.getElementById('p-ttl').innerText = formData.tempat_lahir + ", " + formData.tgl_lahir;
-        document.getElementById('p-gender').innerText = formData.gender + " (GOL: " + formData.gol_darah + ")";
-        document.getElementById('p-alamat').innerText = formData.alamat;
-        document.getElementById('p-rtrw').innerText = formData.rtrw;
-        document.getElementById('p-kel').innerText = formData.keldesa;
-        document.getElementById('p-kec').innerText = formData.kecamatan;
-        document.getElementById('p-agama').innerText = formData.agama;
-        document.getElementById('p-status').innerText = formData.status;
-        document.getElementById('p-pekerjaan').innerText = formData.pekerjaan;
-        document.getElementById('p-kwn').innerText = formData.kwn;
-        document.getElementById('p-berlaku').innerText = formData.berlaku;
-
-        if (fileInput.files[0]) {
-          document.getElementById('p-foto').src = URL.createObjectURL(fileInput.files[0]);
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileData = { base64: e.target.result.split(',')[1], mimeType: file.type };
+                kirimData(fileData);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            kirimData(null);
         }
 
-        document.getElementById('ktpModal').style.display = 'flex';
-        alert("Selesai! Jika data tidak muncul di Sheet, pastikan Deployment di Apps Script sudah 'Anyone'.");
-        
-        btn.innerText = "Simpan Data";
-        btn.disabled = false;
-        document.getElementById('ktpForm').reset();
-      })
-      .catch(err => {
-        alert("Gagal Terhubung: " + err);
-        btn.innerText = "Simpan Data";
-        btn.disabled = false;
-      });
-    }
-  });
+        function kirimData(fileData) {
+            const formData = {
+                nik: document.getElementById('nik').value,
+                nama: document.getElementById('nama').value,
+                tempat_lahir: document.getElementById('tempat_lahir').value,
+                tgl_lahir: document.getElementById('tgl_lahir').value,
+                gender: document.getElementById('gender').value,
+                gol_darah: document.getElementById('gol_darah').value,
+                alamat: document.getElementById('alamat').value,
+                rtrw: document.getElementById('rtrw').value,
+                keldesa: document.getElementById('keldesa').value,
+                kecamatan: document.getElementById('kecamatan').value,
+                agama: document.getElementById('agama').value,
+                status: document.getElementById('status').value,
+                pekerjaan: document.getElementById('pekerjaan').value,
+                kwn: document.getElementById('kwn').value,
+                berlaku: document.getElementById('berlaku').value,
+                fileData: fileData
+            };
+
+            // Menggunakan fetch karena hosting luar tidak bisa pakai google.script.run
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                // Tampilkan data ke Popup KTP
+                document.getElementById('p-nik').innerText = formData.nik;
+                document.getElementById('p-nama').innerText = formData.nama;
+                document.getElementById('p-ttl').innerText = formData.tempat_lahir + ", " + formData.tgl_lahir;
+                document.getElementById('p-gender').innerText = formData.gender + " (GOL: " + formData.gol_darah + ")";
+                document.getElementById('p-alamat').innerText = formData.alamat;
+                document.getElementById('p-rtrw').innerText = formData.rtrw;
+                document.getElementById('p-kel').innerText = formData.keldesa;
+                document.getElementById('p-kec').innerText = formData.kecamatan;
+                document.getElementById('p-agama').innerText = formData.agama;
+                document.getElementById('p-status').innerText = formData.status;
+                document.getElementById('p-pekerjaan').innerText = formData.pekerjaan;
+                document.getElementById('p-kwn').innerText = formData.kwn;
+                document.getElementById('p-berlaku').innerText = formData.berlaku;
+
+                if (fileInput.files[0]) {
+                    document.getElementById('p-foto').src = URL.createObjectURL(fileInput.files[0]);
+                }
+
+                // Munculkan Modal
+                document.getElementById('ktpModal').style.display = 'flex';
+                alert("Data Terkirim!");
+
+                // Reset Tombol dan Form
+                btn.innerText = "Simpan Data";
+                btn.disabled = false;
+                document.getElementById('ktpForm').reset();
+            })
+            .catch(err => {
+                alert("Gagal: " + err);
+                btn.innerText = "Simpan Data";
+                btn.disabled = false;
+            });
+        }
+    });
 </script>
 </body>
 </html>
